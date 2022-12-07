@@ -1,6 +1,7 @@
 import Preheader from "./Preheader"
 import ButtonNav from "./ButtonNav"
 import CartWidget from "./CartWidget"
+import { Link } from "react-router-dom"
 
 const NavBar = () => {
   return (
@@ -13,16 +14,15 @@ const NavBar = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="menu-access navbar-nav">
-                <ButtonNav linkBtn={"#"} textBtn={"Mujer"} />
-                <ButtonNav linkBtn={"#"} textBtn={"hombre"} />
-                <ButtonNav linkBtn={"#"} textBtn={"niño"} />
-                <ButtonNav linkBtn={"#"} textBtn={"niña"} />
-                <ButtonNav linkBtn={"#"} textBtn={"Ver todo"} />
+                <Link to={`/category/3`} >Mujer</Link>
+                <Link to={`/category/2`} >Hombre</Link>
+                <Link to={`/category/1`} >Niña</Link>
+                <Link to={`/`} >Ver todo</Link>
             </ul>
         </div>
 
         <div className="logo-tns-tm">
-            <a href="#"><img src="./src/assets/logo-tennis.png" alt=""/></a>
+            <Link to='/'><img src="../src/assets/logo-tennis.png" alt=""/></Link>
         </div>
         <ul className="top-access">
              <li><a href="#"><span className="icon-search"></span></a></li>
