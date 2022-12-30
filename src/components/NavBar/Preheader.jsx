@@ -8,7 +8,6 @@ const Preheader = ({textPreheader}) =>{
                 <div className="info-account">
                     <ul>
                         <li>¿NECESITAS AYUDA?</li>
-                        <li>INICIAR SESIÓN</li>
                     </ul>
                 </div>
             </section>

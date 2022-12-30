@@ -1,52 +1,82 @@
-import { gfetch } from "../../helpers/gfetch"
+import {getFirestore, doc, getDoc} from "firebase/firestore"
 import { useState, useEffect } from "react"
-import {useParams} from "react-router-dom"
+import {useParams, Link} from "react-router-dom"
+import { useCartContext } from "../../context/CartContext"
+
 
 const ItemDetailContainer = () => {
+    
+    const [unitsToAdd, setUnitsToAdd] = useState(1)
+    const {cartList, addToCart} = useCartContext()
     const {productId} = useParams()
     const [product, setProduct]= useState([])
     const [loading, setLoading] = useState(true)
-
+    
+    
+    
     useEffect(()=>{
-        gfetch()
-        .then(data => setProduct(data.find((product)=> product.id == productId)))
+        const db = getFirestore()
+        const queryDoc = doc(db, 'productos', productId)
+        getDoc(queryDoc)
+        .then(resp => setProduct({id: resp.id, ...resp.data() }))
         .catch(err=>console.log(err))
         .finally(()=> setLoading(false))
-      }, [])
-      //console.log(products)
+    }, [])
+    
 
-      const[unitsToAdd, setUnitsToAdd] = useState(1)
+    
+    const lessUnits = () => {
+        if(unitsToAdd > 1){
+            setUnitsToAdd (unitsToAdd-1)
+        }
+    }
+    const plusUnits = ()=>  {
+        if(unitsToAdd < product.stock){
+            setUnitsToAdd (unitsToAdd+1) 
+        }
+    }
+
+    const onAdd = (quantity) => {
+        addToCart({...product, quantity})
+    }
+
+    const renderProduct = () =>{
+        if(product.name){
+            return <div id="productDetailGrid">
+                        <section className="picture-product">
+                            <img src={product.img} alt={product.name} />  
+                        </section> 
+                        <section className="product-description">
+                            <h2>{product.name}</h2>
+                            <p className="brand">{product.brand}</p>
+                            <div className="item-price">
+                                <p className="new-price">${product.price}</p>
+                            </div>
+                            <p>{product.description}</p>
+                            <div className="call-to-action">
+                                <button className="buttonAddUnits" onClick={lessUnits}>-</button>
+                                <p className="countUnits">{unitsToAdd}</p>
+                                <button className="buttonAddUnits plusUnits" onClick={plusUnits}>+</button>
+                                <button className="btn-primary-fill" onClick={()=> onAdd(unitsToAdd)}>ADD TO CART</button>
+                            </div>
+                        </section>
+                    </div>
+        }else{
+            return <div className="productoNoEncontrado">
+                <h2>El producto buscado no existe</h2>
+                <Link className="btn-primary-fill noEncontrado" to={`/`} >Ver productos</Link>
+            </div>
+        }
+    }
+
   return (
     <>
         <div className="prodcutDetail">
             { 
-                loading ? <h2>cargando</h2> : 
-                <div key={product.id}>
-                    <img src={product.img} alt={product.name} />  
-                    <p>Nombre: {product.name}</p>
-                    <p>category: {product.category}</p>
-                    <button onClick={()=> setUnitsToAdd((unitsToAdd) => {
-                        let newUnits = unitsToAdd -1 
-                        if(newUnits <= 0){
-                            return 1
-                        }else{
-                            return newUnits
-                        }
-                    } )}>-</button>
-                    <p>{unitsToAdd}</p>
-                    <button onClick={()=> setUnitsToAdd((unitsToAdd) => {
-                        let newUnits = unitsToAdd +1 
-                        if(newUnits >= product.stock){
-                            return product.stock
-                        }else{
-                            return newUnits
-                        }
-                    } )}>+</button>
-                    <button onClick={()=>console.log(`agregaste ${unitsToAdd} del producto ${product.name}`)}>ADD TO CART</button>
-                </div>
-                
+                loading ? <h2>cargando</h2> :
+                renderProduct()
             }
-            
+
         </div>
     </>
   )

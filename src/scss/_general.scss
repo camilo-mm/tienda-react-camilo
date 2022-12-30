@@ -12,3 +12,36 @@ body {
     text-align: center;
     color: #006f6c;
 }
+
+.buttonAddUnits {
+    padding: 3px 13px;
+    display: inline-block;
+    background: #000;
+    color: #fff;
+    border: 0;
+    border-radius: 50%;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.plusUnits {
+    padding: 3px 10px;
+}
+
+.countUnits {
+    border: 1px solid #000;
+    width: 11px;
+    padding: 10px;
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.productoNoEncontrado {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.noEncontrado {
+    margin: 20px auto !important;
+    width: 25% !important;
+}
